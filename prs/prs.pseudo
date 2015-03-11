@@ -1,0 +1,17 @@
+This game is played between two players. Both players choose a hand of rock or paper or scissors randomly at the same time. 
+Based on the rules of the game, who ever chooses better item will win.
+
+Noun: game, Player, hand
+
+Based on above para, 
+1) User can be first player
+2) computer can be second player
+3) User picks a hand, Computer picks a hand
+
+Program detials
+1) create a class called Game. This is master class.
+2) Create a class for user.  In this class ask for input and receive input from user about their pick.
+3) Create a class for computer. Pick one of P/R/S
+4) Create a compare method in game class and compare choices of user and computer. 
+5) Display outcome
+6) ask if user wishes to play again or not. 
