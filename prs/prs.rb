@@ -3,11 +3,11 @@ module Comparable
 def compare(player)
   if(self.choice == player.choice)
     puts "\nIts a tie!"
-  elsif(player.choice == 'p' && self.choice == 'r') || (player.choice == 'r' && self.choice == 's') || (player.choice == 's' && self.choice == 'p')
+  elsif(player.choice == 'p' && choice == 'r') || (player.choice == 'r' && choice == 's') || (player.choice == 's' && choice == 'p')
     display_winning_message(player.choice)
     puts "\nYou Won!!!"
   else
-    display_winning_message(self.choice)
+    display_winning_message(choice)
     puts "\nComputer Won!"
   end
 end
