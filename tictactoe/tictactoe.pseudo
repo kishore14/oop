@@ -1,0 +1,9 @@
+Tic-tac-toe is a game that is played between two players. This is a board game. The board has total 9 squares. 
+Each player should select a square alternatively. The first player to obtain three consecutive squares wins. If there are no squares left and there are no three consecutive squares for either player, then the game is a tie.
+
+1) create a class of game to start the game.
+2) Create a class for Player which will be inherited by Human and computer
+3) In Human class, define methods related to human actions
+4) In computer class, define methods related to computer actions
+5) As part of game class, define methods pertaining to game like to check who wins, the state of the board, display messages etc.
+6) Repeat these steps till user wants to quit. 
