@@ -1,18 +1,16 @@
 #prs.rb
-class Player
-  attr_accessor :choice
-  def compare(player)
-    if(self.choice == player.choice)
-      puts "\nIts a tie!"
-    elsif(player.choice == 'p' && self.choice == 'r') || (player.choice == 'r' && self.choice == 's') || (player.choice == 's' && self.choice == 'p')
-      display_winning_message(player.choice)
-      puts "\nYou Won!!!"
-    else
-      display_winning_message(self.choice)
-      puts "\nComputer Won!"
-    end
+module Comparable
+def compare(player)
+  if(self.choice == player.choice)
+    puts "\nIts a tie!"
+  elsif(player.choice == 'p' && self.choice == 'r') || (player.choice == 'r' && self.choice == 's') || (player.choice == 's' && self.choice == 'p')
+    display_winning_message(player.choice)
+    puts "\nYou Won!!!"
+  else
+    display_winning_message(self.choice)
+    puts "\nComputer Won!"
   end
-  
+end
   def display_winning_message(winning_choice)
 	  case winning_choice
 	  when 'p'
@@ -23,6 +21,11 @@ class Player
 		  puts "\nScissors shreds Paper"
 	  end
 	end
+end
+
+class Player
+  include Comparable
+  attr_accessor :choice
 end
 
 class Human < Player
