@@ -1,7 +1,7 @@
 #prs.rb
 module Comparable
 def compare(player)
-  if(self.choice == player.choice)
+  if(choice == player.choice)
     puts "\nIts a tie!"
   elsif(player.choice == 'p' && choice == 'r') || (player.choice == 'r' && choice == 's') || (player.choice == 's' && choice == 'p')
     display_winning_message(player.choice)
