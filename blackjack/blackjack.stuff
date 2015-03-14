@@ -1,0 +1,5 @@
+I used @deck = CARD.product(SUIT) to fill the card but after progressing through the code, i realized that this will not work because
+  1) This puts an array into the deck
+  2) but we need the deck to have card objects instead.
+  
+At times, I had to send player object to dealer and dealer object to player. is this correct? can this be avoided? I mean does somehow all object know each others state??

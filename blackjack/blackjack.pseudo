@@ -1,0 +1,14 @@
+Blackjack is a casino game that is played between dealer and a player. this version of the game is played between computer (dealer) and user.
+
+To start the game, a shuffled deck is used to distribute a hand to player first and then dealer. Players cards are shown face up where as only one  of computer cards is shown. 
+Player is asked to make a move till he busts or stays. If the count of the cards is greater than 21 then it means he busted. 
+
+Then computer starts selection. Computer will stop hitting at 17. Once computer stops, the hand counts of both computer and player is compared and who ever has higher value but lesser than 21 is a winner. Any one who gets 21 gets a blackjack.
+
+Implementation steps
+1) Create a class for game called blackjack.
+2) Create a class for deck to hold all the operations for deck like shuffle, draw etc
+3) Create a Player class that is inherited by computer and player
+4) computer and player classes will have methods to choose and display their cards.
+5) Game class will implement method to count the hands and display the winner
+6) Also keep count of the amount player wins and looses and display that in game method.
