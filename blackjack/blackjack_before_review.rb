@@ -22,23 +22,23 @@ class Card
 end
 
 class Deck
-  attr_accessor :cards
+  attr_accessor :deck
   
   def initialize
-    @cards = []
+    @deck = []
     ['H', 'D', 'S', 'C'].each do |suit|
       ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'].each do |face_value|
-        @cards << Card.new(suit, face_value)
+        @deck << Card.new(suit, face_value)
       end
     end
   end
   
   def scramble!
-    cards.shuffle!
+    deck.shuffle!
   end
   
-  def deal_card
-    cards.shift
+  def deal_a_card
+    deck.shift
   end
 end
 
@@ -54,8 +54,7 @@ module Hand
       card.display_card
       print("   ")  
     end
-    puts "\nHand value: #{cards_total}"
-    puts
+    puts "Hand value: #{cards_total}\n"
   end
   
   def cards_total
@@ -77,22 +76,74 @@ module Hand
   end
   
   def busted?
-    cards_total > 21 
+    cards_total > 21 ? true : false
   end
   
   def blackjack?
-    cards_total == 21 && hand.size == 2
+    cards_total == 21 ? true : false
   end
 end
 
 class Player
   include Hand
-  attr_accessor :name, :hand, :stayed
+  attr_accessor :name, :hand, :stayed, :bet_amount, :blackjack
   
   def initialize(player_name)
     @name = player_name
     @stayed = false
+    @blackjack = false
     @hand = []
+    @bet_amount = 0
+  end
+  
+  def play(deck, dealer)
+    collect_bet
+    display_hands_while_player_plays(dealer)
+    if !blackjack?
+      begin
+        choice = player_choice? 
+        if choice == 'h'
+          add_card_to_hand(deck.deal_a_card)
+          display_hands_while_player_plays(dealer)
+        else
+          display_hands_after_player_plays(dealer)
+          self.stayed = true
+        end
+      end while !busted? && !stayed
+    else
+      blackjack = true
+    end
+  end
+  
+  def collect_bet
+    begin
+    puts "Enter bet: "
+    bet_amount = gets.chomp.to_i
+    if bet_amount <= 0  
+      puts "Invalid Input!  "
+    end
+    end until bet_amount > 0
+  end
+   
+  def display_hands_while_player_plays(dealer)
+    system 'clear'
+    dealer.display_dealer_one_card 
+    display_cards
+  end
+    
+  def display_hands_after_player_plays(dealer)
+    system 'clear'
+    dealer.display_cards
+    display_cards
+  end
+    
+  def player_choice?
+    puts "\nDo you want to Hit or Stay (h/s)"
+    player_choice = gets.chomp.downcase
+    if !['h', 's'].include?(player_choice)
+      puts "\nInvalid selection! Please enter 'h' to Hit or 's' to Stay !! "
+    end
+    player_choice
   end
 end
 
@@ -104,11 +155,26 @@ class Dealer
     @name = 'Dealer'
     @hand = []
   end
-  def display_one_card
+  
+  def deal_initial_hands(deck, player, dealer)
+    2.times do 
+      player.add_card_to_hand(deck.deal_a_card)
+      dealer.add_card_to_hand(deck.deal_a_card)
+    end
+  end
+  
+  def display_dealer_one_card
     puts "#{name}"
     puts "------------"
     puts "#{hand[0].display_card}" + " and *" 
     puts
+  end
+  def play(deck, player)
+    while cards_total < 17
+      add_card_to_hand(deck.deal_a_card)
+      display_cards
+      player.display_cards
+    end 
   end
 end
 
@@ -123,65 +189,26 @@ class Blackjack
   end
   
   def start_game
-    system 'clear'
     deck.scramble!
-    deal_initial_hands
-    dealer.display_one_card
-    player.display_cards
-    if !player.blackjack?
-      player_turn
-      dealer_turn if player.stayed 
+    dealer.deal_initial_hands(deck, player, dealer)
+    player.play(deck, dealer)
+    if player.stayed && !player.blackjack
+      dealer.play(deck, player)
     end
     display_winner
   end
   
-  def deal_initial_hands
-    2.times do 
-      player.add_card_to_hand(deck.deal_card)
-      dealer.add_card_to_hand(deck.deal_card)
-    end
-  end
- 
-  def player_turn
-      begin
-        choice = player_choice? 
-        if choice == 'h'
-          player.add_card_to_hand(deck.deal_card)
-          dealer.display_one_card
-          player.display_cards
-        else
-          player.stayed = true
-        end
-      end until player.busted? || player.stayed
-  end
-  
-  def player_choice?
-    puts "\nDo you want to Hit or Stay (h/s)"
-    player_choice = gets.chomp.downcase
-    system 'clear'
-    if !['h', 's'].include?(player_choice)
-      puts "\nInvalid selection! Please enter 'h' to Hit or 's' to Stay !! "
-    end
-    player_choice
-  end
-  
-  def dealer_turn
-    while dealer.cards_total < 17
-      dealer.add_card_to_hand(deck.deal_card)
-      dealer.display_cards
-      player.display_cards
-    end 
-  end
-  
-  def compute_winner
+  def winner?
+   dealer_hand_value = dealer.cards_total
+   player_hand_value = player.cards_total
   case
-    when player.cards_total > 21
+    when player_hand_value > 21
       return 'dealer'
-    when dealer.cards_total > 21
+    when dealer_hand_value > 21
       return 'player'
-    when dealer.cards_total > player.cards_total 
+    when dealer_hand_value > player_hand_value 
       return 'dealer'
-    when dealer.cards_total < player.cards_total
+    when dealer_hand_value < player_hand_value
       return 'player'
     else
       return 'push'
@@ -189,10 +216,8 @@ class Blackjack
   end
   
   def display_winner
-    system 'clear'
-    dealer.display_cards
-    player.display_cards
-  case compute_winner
+  player.display_hands_after_player_plays(dealer)  
+  case winner?
     when 'dealer'
       puts "*** Dealer wins!! ***"
     when 'player' 
