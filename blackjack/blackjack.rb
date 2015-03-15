@@ -81,7 +81,7 @@ module Hand
   end
   
   def blackjack?
-    cards_total == 21 && hand.size == 2
+    cards_total == 21 
   end
 end
 
